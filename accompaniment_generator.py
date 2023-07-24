@@ -78,6 +78,7 @@ class Accompaniment:
         """
         midi_stream = converter.parse(midi)
         key_analysis = midi_stream.analyze("key")
+        print(key_analysis.tonicPitchNameWithCase)
         return key_analysis.tonicPitchNameWithCase
 
     def define_good_chords(self, midi_file):
@@ -169,5 +170,3 @@ class Accompaniment:
         GA = GeneticAlgo(self.midi_file)
         best_chord_progression = GA.genetic_algorithm(good_chords)
         self.create_midi(best_chord_progression)
-
-        return self.melody

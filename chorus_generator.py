@@ -7,8 +7,7 @@ import music21
 import matplotlib.pyplot as plt
 
 
-
-def generate_chorus(orig, midi):
+def generate_chorus(orig):
     filename = orig
     initial_melody = []
     midi_file = converter.parse(filename)
@@ -48,7 +47,7 @@ def generate_chorus(orig, midi):
 
     midi = MIDIFile(1)
     midi.addTrackName(track, time, "music_gen")
-    midi.addTempo(track, time, 40)
+    midi.addTempo(track, time, 30)
 
     grammar_rules = dict()
     for i in range(len(initial_melody)):
@@ -220,7 +219,7 @@ def generate_chorus(orig, midi):
     loc_durations = []
     gen_local_durations(loc_durations, size)
     print(loc_durations)
-    for _ in range(2):
+    for _ in range(1):
         for bar in range(len(melody) // siz):
             sum_dur = 0
             for i in range(2):
@@ -271,7 +270,7 @@ def generate_chorus(orig, midi):
                         except:
                             break
 
-    with open("output.mid", 'wb') as out:
+    with open("chorus.mid", 'wb') as out:
         midi.writeFile(out)
 
     return midi

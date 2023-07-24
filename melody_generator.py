@@ -17,38 +17,6 @@ def check_note_pitch(note):
         note += 12
     return note
 
-# num = 2
-#
-# def get_melody_per_chord(melody):
-#     n_notes = {}
-#     track = melody.tracks[0]
-#     cct = melody.ticks_per_beat * num
-#     chord_change_time = cct
-#     a = 0
-#     n_notes[a] = []
-#     for msg in track:
-#         if msg.type == 'note_off':
-#             if chord_change_time == 0:
-#                 chord_change_time = cct
-#                 a += 1
-#                 n_notes[a] = []
-#             if msg.time <= chord_change_time:
-#                 chord_change_time -= msg.time
-#                 n_notes[a].append(msg.note)
-#             else:
-#                 note_time = msg.time
-#                 while note_time >= chord_change_time:
-#                     note_time -= chord_change_time
-#                     chord_change_time = cct
-#                     n_notes[a].append(msg.note)
-#                     a += 1
-#                     n_notes[a] = []
-#                 if note_time != 0:
-#                     chord_change_time -= note_time
-#                     n_notes[a].append(msg.note)
-#     print(n_notes)
-#     return n_notes
-
 
 class Melody:
 
@@ -63,7 +31,10 @@ class Melody:
         self.orig_notes = []
         self.markov_chain = {}
         self.melody_notes = []
-        self.num_notes = 16
+        self.num_notes = 15
+
+        self.key = 7
+        self.dominant = self.key + 4
 
         # Add time signature and tempo variables
         self.time_signature = (4, 4)  # Default 4/4 time signature
@@ -130,6 +101,8 @@ class Melody:
                 current_note = check_note_pitch(choice(list(self.markov_chain.keys())))
                 while abs(current_note - last_note) < 2 or abs(current_note - last_note) > 24:
                     current_note = check_note_pitch(choice(list(self.markov_chain.keys())))
+
+        self.melody_notes.append(current_note - current_note % 12 - 1)
 
         return self.melody_notes
 
