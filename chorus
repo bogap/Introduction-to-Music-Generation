@@ -4,7 +4,7 @@ from midiutil.MidiFile import MIDIFile
 import mido
 from music21 import converter
 from music21 import note
-
+import matplotlib.pyplot as plt
 
 filename = "inp.mid"
 initial_melody = []
@@ -99,25 +99,25 @@ duration_combinations = [[1, 1, 1, 1], [0.5, 0.5, 0.5, 0.5], [0.25, 0.25, 0.25, 
                          [0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125,
                           0.125, 0.125, 0.125]]
 
-NUM_PARTICLES = 100  # Number of particles in the swarm
-NUM_ITERATIONS = 700  # Number of iterations
+NUM_PARTICLES = 1000  # Number of particles in the swarm
+NUM_ITERATIONS = 1000  # Number of iterations
 MAX_NOTE = 83 + 12
 MIN_NOTE = 72
 
 
-def evaluate_fitness(melody, chords):
-    num_notes = len(melody)
+def evaluate_fitness(melody_fitness, chords_fitness):
+    num_notes = len(melody_fitness)
     total_fitness = 0.0
 
     # if tonic note is in the first or last chord
-    if random_key == chords[0]:
+    if random_key == chords_fitness[0]:
         total_fitness += 1
-    if random_key == chords[-1]:
+    if random_key == chords_fitness[-1]:
         total_fitness += 1
 
     for k in range(num_notes):
         # distance between melody note and chord
-        chord_note_distance = abs(chords[k] - melody[k])
+        chord_note_distance = abs(chords_fitness[k] - melody_fitness[k])
 
         # check if dissonant or consonant
         if chord_note_distance in [0, 12, 7, 5]:
@@ -133,14 +133,14 @@ def evaluate_fitness(melody, chords):
             total_fitness += 3
 
         # if chords offsets are in pentatonic
-        if abs(chords[k] - random_key) in [0, 2, 4, 7, 9] and random_key2 == 'major':
+        if abs(chords_fitness[k] - random_key) in [0, 2, 4, 7, 9] and random_key2 == 'major':
             total_fitness += 1
-        elif abs(chords[k] - random_key) in [0, 3, 5, 7, 10] and random_key2 == 'minor':
+        elif abs(chords_fitness[k] - random_key) in [0, 3, 5, 7, 10] and random_key2 == 'minor':
             total_fitness += 1
 
         if k > 0:
             # if chords are not too far
-            chord_jump = abs(chords[k] - chords[k - 1])
+            chord_jump = abs(chords_fitness[k] - chords_fitness[k - 1])
             if chord_jump > 7:
                 total_fitness -= 1
             else:
@@ -151,7 +151,10 @@ def evaluate_fitness(melody, chords):
     return average_fitness
 
 
-def pso(melody_pso):
+fitness_y = []
+
+
+def pso(melody_pso, fitness_x):
     num_notes = len(melody_pso)
     # particles - random notes
     particles = np.random.randint(MIN_NOTE, MAX_NOTE, size=(NUM_PARTICLES, num_notes))
@@ -168,7 +171,7 @@ def pso(melody_pso):
 
     # PSO parameters
     inertia_weight = 0.9
-    cognitive_weight = 1.5
+    cognitive_weight = 3.5
     social_weight = 1.5
 
     # PSO main loop
@@ -185,6 +188,7 @@ def pso(melody_pso):
 
             # Evaluate fitness for the new position
             fitness = evaluate_fitness(melody_pso, particles[k])
+            fitness_x += [fitness]
 
             # Update personal best
             if fitness > personal_best_fitness[k]:
@@ -198,7 +202,18 @@ def pso(melody_pso):
     return global_best_position
 
 
-chords = pso(melody)
+chords = pso(melody, fitness_y)
+fitness_x = [i for i in range(len(fitness_y))]
+
+# fitness_x,fitness_y=fitness_x[0:1000], fitness_y[0:1000]
+fitness_x = np.array(fitness_x)
+fitness_y = np.array(fitness_y)
+plt.plot(fitness_x, fitness_y)
+plt.title("Curve plotted using the given points")
+plt.xlabel("X")
+plt.ylabel("Y")
+plt.show()
+
 print(*melody)
 print(*chords)
 siz = 4 if size == '4/4' else 3
