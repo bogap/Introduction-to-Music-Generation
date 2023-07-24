@@ -224,7 +224,6 @@ def generate_chorus(orig):
             sum_dur = 0
             for i in range(2):
                 if siz == 4:
-                    midi.tracks
                     midi.addNote(track, channel1, chords[bar * siz + (bar % 4 + i)] - 12, time, 1, volume - 40)
                     if random_key2 == 'major':
                         midi.addNote(track, channel1, chords[bar * siz + (bar % 4)] - 12 + 4, time, 1, volume - 40)
