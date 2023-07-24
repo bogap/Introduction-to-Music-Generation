@@ -1,5 +1,5 @@
 import random
-from mido import MidiFile, Message, MidiTrack
+from mido import MidiFile
 
 num = 2
 

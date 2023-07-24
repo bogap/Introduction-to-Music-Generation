@@ -155,9 +155,3 @@ class Melody:
         value = self.create_midi()
         return value
 
-
-value = 1
-while value != 0:
-    melody = Melody('rivers_flow_in_you.mid')
-    value = melody.generate()
-

@@ -40,7 +40,7 @@ def generate_chorus(orig):
     channel = 0
     channel1 = 1
     channel10 = 3
-    volume = 100
+    volume = 127
     volume1 = 60
     time_melody = 0
     melody_counter = 0

@@ -1,4 +1,4 @@
-from mido import Message, MidiFile, MidiTrack
+from mido import MidiFile, Message, MidiTrack
 from music21 import converter
 from genetic_algo import *
 
