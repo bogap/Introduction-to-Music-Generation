@@ -155,7 +155,7 @@ class Accompaniment:
             #     Message('note_off', channel=0, note=chord[2], velocity=80, time=self.unit_time))
 
         self.melody.tracks.append(self.accompaniment.tracks[0])
-        self.melody.save('output.mid')
+        self.melody.save('verse.mid')
 
     def generate_accomp(self):
         """
@@ -169,3 +169,5 @@ class Accompaniment:
         GA = GeneticAlgo(self.midi_file)
         best_chord_progression = GA.genetic_algorithm(good_chords)
         self.create_midi(best_chord_progression)
+
+        return self.melody
