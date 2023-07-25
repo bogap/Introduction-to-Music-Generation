@@ -267,7 +267,6 @@ class GeneticAlgo:
         self.mutation_rate = 0.001
 
         self.midi_origin = MidiFile(midi_file)
-        # self.chromosome_size = get_n_chords(self.midi_origin) // num
         self.melody_by_chords = get_melody_per_chord(self.midi_origin)
         self.chromosome_size = len(self.melody_by_chords)
 
