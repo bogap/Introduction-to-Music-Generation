@@ -29,4 +29,4 @@ runtime = end_time - start_time
 print("Generation time: {:.6f} seconds".format(runtime))
 
 # Play composition
-# play()
+play()

@@ -64,7 +64,6 @@ class Accompaniment:
         time = melody_time(self.melody)
         self.parts = parts
         self.unit_time = self.melody.ticks_per_beat * num
-        #self.unit_time = 512
 
     def detect_key(self, midi):
         """
@@ -78,6 +77,7 @@ class Accompaniment:
         """
         midi_stream = converter.parse(midi)
         key_analysis = midi_stream.analyze("key")
+        print(key_analysis.tonicPitchNameWithCase)
         return key_analysis.tonicPitchNameWithCase
 
     def define_good_chords(self, midi_file):
@@ -141,18 +141,6 @@ class Accompaniment:
                                                         time=self.unit_time))
             self.accompaniment.tracks[0].append(Message('note_off', channel=0, note=chord[1], velocity=0, time=0))
             self.accompaniment.tracks[0].append(Message('note_off', channel=0, note=chord[2], velocity=0, time=0))
-            # self.accompaniment.tracks[0].append(
-            #     Message('note_on', channel=0, note=chord[0], velocity=80, time=0))
-            # self.accompaniment.tracks[0].append(
-            #     Message('note_off', channel=0, note=chord[0], velocity=80, time=self.unit_time))
-            # self.accompaniment.tracks[0].append(
-            #     Message('note_on', channel=0, note=chord[1], velocity=80, time=0))
-            # self.accompaniment.tracks[0].append(
-            #     Message('note_off', channel=0, note=chord[1], velocity=80, time=self.unit_time))
-            # self.accompaniment.tracks[0].append(
-            #     Message('note_on', channel=0, note=chord[2], velocity=80, time=0))
-            # self.accompaniment.tracks[0].append(
-            #     Message('note_off', channel=0, note=chord[2], velocity=80, time=self.unit_time))
 
         self.melody.tracks.append(self.accompaniment.tracks[0])
         self.melody.save('verse.mid')
