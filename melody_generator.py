@@ -35,17 +35,14 @@ class Melody:
 
         self.key = 7
         self.dominant = self.key + 4
+        self.time_signature = (4, 4)
 
-        # Add time signature and tempo variables
-        self.time_signature = (4, 4)  # Default 4/4 time signature
-        # self.tempo_value = self.num_notes * 14
-
-        # Add note durations and their probabilities
+        # Note durations and their probabilities
         self.note_durations = {
             120: 0.1,
             240: 0.4,
             480: 0.4,
-            960: 0.1,
+            960: 0.1
         }
 
     def define_orig_notes(self):
@@ -72,11 +69,6 @@ class Melody:
                 self.markov_chain[current_note] = [next_note]
             else:
                 self.markov_chain[current_note].append(next_note)
-
-        # # Prevent consecutive identical notes
-        # for key, value in self.markov_chain.items():
-        #     if key in value:
-        #         value.remove(key)
 
         return self.markov_chain
 
@@ -112,27 +104,20 @@ class Melody:
 
         :return: None
         """
-        # Set time signature and tempo messages in the MIDI file
         self.track.append(
             MetaMessage('time_signature', numerator=self.time_signature[0], denominator=self.time_signature[1], time=0))
-        # self.track.append(MetaMessage('set_tempo', tempo=self.tempo_value, time=0))
         melody_duration = 0
 
         for note in self.melody_notes:
             note_duration = np.random.choice(list(self.note_durations.keys()), p=list(self.note_durations.values()))
-
-            # Calculate the duration in ticks based on the tempo and note duration
-            ticks_per_beat = self.melody_midi.ticks_per_beat
-            duration_ticks = int(note_duration)  # 4 is the default duration for quarter notes
+            duration_ticks = int(note_duration)
 
             self.track.append(Message('note_on', note=note, velocity=127, time=0))
             self.track.append(Message('note_off', note=note, velocity=127, time=duration_ticks))
             melody_duration += duration_ticks
 
         self.melody_midi.save("verse_melody.mid")
-        # print(melody_duration)
         val = melody_duration % 960
-        # print(val)
         melody_duration -= melody_duration % 960
         return val
 
