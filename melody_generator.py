@@ -1,7 +1,10 @@
 from mido import Message, MidiFile, MidiTrack, MetaMessage
 from random import choice
 import numpy as np
+from music21 import converter
 
+
+CHORDS = {0: 'C', 1: 'C#', 2: 'D', 3: 'D#', 4: 'E', 5: 'F', 6: 'F#', 7: 'G', 8: 'G#', 9: 'A', 10: 'A#', 11: 'B'}
 
 def check_note_pitch(note):
     """
@@ -16,6 +19,37 @@ def check_note_pitch(note):
     while note <= 47:
         note += 12
     return note
+
+
+def define_note(chord, chords):
+    """
+    Returns the MIDI note corresponding to the given chord.
+
+    Args:
+        chord (str): The chord name.
+        chords (dict): A dictionary mapping note numbers to chord names.
+
+    Returns:
+        int: The MIDI note corresponding to the chord.
+    """
+    for cur_note, cur_chord in chords.items():
+        if cur_chord == chord:
+            return cur_note
+
+
+def detect_key(midi):
+    """
+            Detects the key of a MIDI file.
+
+            Args:
+                midi (str): The MIDI file name.
+
+            Returns:
+                str: The detected key of the MIDI file.
+            """
+    midi_stream = converter.parse(midi)
+    key_analysis = midi_stream.analyze("key")
+    return key_analysis.tonicPitchNameWithCase
 
 
 class Melody:
@@ -33,8 +67,11 @@ class Melody:
         self.melody_notes = []
         self.num_notes = 15
 
-        self.key = 7
-        self.dominant = self.key + 4
+        detected_key = detect_key(midi_file_path)
+        key = detected_key.upper()
+
+        self.key = define_note(key, CHORDS)
+        self.dominant = (self.key + 4) % 12
         self.time_signature = (4, 4)
 
         # Note durations and their probabilities
@@ -139,4 +176,5 @@ class Melody:
         self.generate_melody_notes()
         value = self.create_midi()
         return value
+
 

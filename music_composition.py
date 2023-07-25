@@ -25,4 +25,6 @@ def play():
 
     play_midi(midi_file1)
 
+# play()
+
 
