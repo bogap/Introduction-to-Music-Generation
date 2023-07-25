@@ -210,7 +210,7 @@ def generate_chorus(orig):
     plt.title("Curve plotted using the given points")
     plt.xlabel("X")
     plt.ylabel("Y")
-    plt.show()
+    #plt.show()
 
     print(*melody)
     print(*chords)
